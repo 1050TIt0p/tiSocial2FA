@@ -8,6 +8,9 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.matveylegenda.tisocial2fa.TiSocial2FA;
@@ -77,7 +80,45 @@ public class Discord {
             );
 
             int time = config.settings.time;
-            new BukkitRunnable() {
+
+            if (config.settings.bossbar.enabled) {
+                String barTitle = ColorParser.hex(
+                        config.settings.bossbar.title
+                                .replace("{time}", String.valueOf(time))
+                );
+                BarColor barColor = BarColor.valueOf(config.settings.bossbar.color);
+                BarStyle barStyle = BarStyle.valueOf(config.settings.bossbar.style);
+
+                BossBar bossBar = Bukkit.createBossBar(barTitle, barColor, barStyle);
+                bossBar.addPlayer(player);
+
+                BukkitRunnable bossBarTask = new BukkitRunnable() {
+                    int remainingTime = time;
+
+                    @Override
+                    public void run() {
+                        if(remainingTime <= 0 || !player.isOnline() || !blockedList.isBlocked(player)) {
+                            bossBar.removePlayer(player);
+                            cancel();
+                            return;
+                        }
+
+                        remainingTime--;
+
+                        double progress = (double) remainingTime / time;
+                        bossBar.setProgress(progress);
+
+                        String barTitle = ColorParser.hex(
+                                config.settings.bossbar.title
+                                        .replace("{time}", String.valueOf(remainingTime))
+                        );
+                        bossBar.setTitle(barTitle);
+                    }
+                };
+                bossBarTask.runTaskTimer(plugin, 0L, 20L);
+            }
+
+            BukkitRunnable kickTask = new BukkitRunnable() {
 
                 @Override
                 public void run() {
@@ -90,7 +131,8 @@ public class Discord {
                         player.kickPlayer(kickMessage);
                     }
                 }
-            }.runTaskLater(plugin, time * 20L);
+            };
+            kickTask.runTaskLater(plugin, time * 20L);
         }
     }
 

@@ -72,6 +72,30 @@ public class Config extends YamlSerializable {
         })
         public List<String> allowedCommands = Arrays.asList("/register", "/reg", "/login", "/l");
 
+        public Bossbar bossbar = new Bossbar();
+
+        @NewLine(amount = 1)
+        public static class Bossbar {
+            public boolean enabled = true;
+
+            @NewLine(amount = 1)
+            @Comment({
+                    @CommentValue(" Текст боссбара")
+            })
+            public String title = "Осталось &c{time} &fсекунд";
+
+            @NewLine(amount = 1)
+            @Comment({
+                    @CommentValue(" Цвет боссбара")
+            })
+            public String color = "RED";
+
+            @NewLine(amount = 1)
+            @Comment({
+                    @CommentValue(" Стиль боссбара")
+            })
+            public String style = "SEGMENTED_12";
+        }
     }
 
     public Messages messages = new Messages();
