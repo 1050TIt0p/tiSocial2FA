@@ -1,6 +1,7 @@
 package ru.matveylegenda.tisocial2fa;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.matveylegenda.tisocial2fa.commands.Social2FA;
@@ -20,18 +21,20 @@ public final class TiSocial2FA extends JavaPlugin {
     public File configFile = new File(getDataFolder() + "/config.yml");
     public Config config = new Config();
 
+    private final ConsoleCommandSender consoleSender = getServer().getConsoleSender();
+
     @Override
     public void onEnable() {
         instance = this;
 
-        Bukkit.getConsoleSender().sendMessage("");
-        Bukkit.getConsoleSender().sendMessage("§b  _   _ ____             _       _ ____  _____ _    ");
-        Bukkit.getConsoleSender().sendMessage("§b | |_(_) ___|  ___   ___(_) __ _| |___ \\|  ___/ \\   ");
-        Bukkit.getConsoleSender().sendMessage("§b | __| \\___ \\ / _ \\ / __| |/ _` | | __) | |_ / _ \\  ");
-        Bukkit.getConsoleSender().sendMessage("§b | |_| |___) | (_) | (__| | (_| | |/ __/|  _/ ___ \\ ");
-        Bukkit.getConsoleSender().sendMessage("§b  \\__|_|____/ \\___/ \\___|_|\\__,_|_|_____|_|/_/   \\_\\");
-        Bukkit.getConsoleSender().sendMessage(" §fВерсия: §9" + getDescription().getVersion() + " §8| §fАвтор: §91050TI_top");
-        Bukkit.getConsoleSender().sendMessage("");
+        consoleSender.sendMessage("");
+        consoleSender.sendMessage("§b  _   _ ____             _       _ ____  _____ _    ");
+        consoleSender.sendMessage("§b | |_(_) ___|  ___   ___(_) __ _| |___ \\|  ___/ \\   ");
+        consoleSender.sendMessage("§b | __| \\___ \\ / _ \\ / __| |/ _` | | __) | |_ / _ \\  ");
+        consoleSender.sendMessage("§b | |_| |___) | (_) | (__| | (_| | |/ __/|  _/ ___ \\ ");
+        consoleSender.sendMessage("§b  \\__|_|____/ \\___/ \\___|_|\\__,_|_|_____|_|/_/   \\_\\");
+        consoleSender.sendMessage(" §fВерсия: §9" + getDescription().getVersion() + " §8| §fАвтор: §91050TI_top");
+        consoleSender.sendMessage("");
 
         config.reloadConfig();
 
@@ -45,7 +48,7 @@ public final class TiSocial2FA extends JavaPlugin {
         new Discord().enableBot();
         new Telegram().enableBot();
 
-        new Metrics(this, 666);
+        new Metrics(this, 22325);
 
         new MessageTask();
     }
