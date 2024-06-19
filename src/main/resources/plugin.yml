@@ -1,0 +1,13 @@
+name: tiSocial2FA
+version: '${project.version}'
+main: ru.matveylegenda.tisocial2fa.TiSocial2FA
+api-version: '1.16'
+libraries:
+  - net.dv8tion:JDA:5.0.0-beta.22
+  - org.telegram:telegrambots-client:7.4.2
+  - org.telegram:telegrambots-longpolling:7.4.2
+  - net.elytrium:serializer:1.1.1
+commands:
+  tisocial2fa:
+    aliases:
+      - social2fa
