@@ -23,6 +23,8 @@ import ru.matveylegenda.tisocial2fa.utils.BlockedList;
 import ru.matveylegenda.tisocial2fa.utils.ColorParser;
 import ru.matveylegenda.tisocial2fa.utils.Config;
 
+import java.util.Arrays;
+
 public class Telegram implements LongPollingSingleThreadUpdateConsumer {
     private TiSocial2FA plugin = TiSocial2FA.getInstance();
     private Config config = plugin.config;
@@ -59,8 +61,21 @@ public class Telegram implements LongPollingSingleThreadUpdateConsumer {
                 player.sendMessage(ColorParser.hex(message));
             }
 
-            String buttonEmoji = config.messages.social.buttonEmoji;
-            String buttonText = config.messages.social.buttonText;
+            String allowButtonEmoji = config.messages.social.buttons.allow.emoji;
+            String allowButtonText = config.messages.social.buttons.allow.text;
+            InlineKeyboardButton allowButton = InlineKeyboardButton
+                    .builder()
+                    .text(allowButtonEmoji + " " +  allowButtonText)
+                    .callbackData("2fa-allow-join")
+                    .build();
+
+            String denyButtonEmoji = config.messages.social.buttons.deny.emoji;
+            String denyButtonText = config.messages.social.buttons.deny.text;
+            InlineKeyboardButton denyButton = InlineKeyboardButton
+                    .builder()
+                    .text(denyButtonEmoji + " " +  denyButtonText)
+                    .callbackData("2fa-deny-join")
+                    .build();
 
             String joinMessage = config.messages.social.join;
 
@@ -71,11 +86,9 @@ public class Telegram implements LongPollingSingleThreadUpdateConsumer {
                     .replyMarkup(InlineKeyboardMarkup
                             .builder()
                             .keyboardRow(
-                                    new InlineKeyboardRow(InlineKeyboardButton
-                                            .builder()
-                                            .text(buttonEmoji + " " +  buttonText)
-                                            .callbackData("2fa-allow-join")
-                                            .build()
+                                    new InlineKeyboardRow(
+                                            allowButton,
+                                            denyButton
                                     )
                             )
                             .build())
@@ -137,8 +150,9 @@ public class Telegram implements LongPollingSingleThreadUpdateConsumer {
                     }
 
                     if (blockedList.isBlocked(player)) {
-                        String kickMessage = ColorParser.hex(config.messages.minecraft.kick);
-                        player.kickPlayer(kickMessage);
+                        String command = config.settings.timeoutCommand
+                                .replace("{player}", player.getName());
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     }
                 }
             };

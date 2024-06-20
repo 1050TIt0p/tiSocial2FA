@@ -6,10 +6,10 @@ import net.elytrium.serializer.annotations.NewLine;
 import net.elytrium.serializer.language.object.YamlSerializable;
 import ru.matveylegenda.tisocial2fa.TiSocial2FA;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Config extends YamlSerializable {
 
@@ -96,25 +96,58 @@ public class Config extends YamlSerializable {
             })
             public String style = "SEGMENTED_12";
         }
+
+        @NewLine(amount = 1)
+        @Comment({
+                @CommentValue(" Команда которая будет выполняться если игрок не успел подтвердить вход")
+        })
+        public String timeoutCommand = "kick {player} &cВы не успели подтвердить вход!";
+
+        @NewLine(amount = 1)
+        @Comment({
+                @CommentValue(" Команда которая будет выполняться если игрока кикнули через кнопку")
+        })
+        public String punishCommand = "ban {player} 5m &cВас выгнали!";
     }
 
     public Messages messages = new Messages();
 
     @NewLine(amount = 1)
     public static class Messages {
-
         public Social social = new Social();
 
         public static class Social {
-            @Comment({
-                    @CommentValue(" Эмодзи кнопки")
-            })
-            public String buttonEmoji = "✅";
+            public Buttons buttons = new Buttons();
 
-            @Comment({
-                    @CommentValue(" Текст кнопки")
-            })
-            public String buttonText = "Подтвердить";
+            public static class Buttons {
+                public Allow allow = new Allow();
+
+                public static class Allow {
+                    @Comment({
+                            @CommentValue(" Эмодзи кнопки")
+                    })
+                    public String emoji = "✅";
+
+                    @Comment({
+                            @CommentValue(" Текст кнопки")
+                    })
+                    public String text = "Подтвердить";
+                }
+
+                public Deny deny = new Deny();
+
+                public static class Deny {
+                    @Comment({
+                            @CommentValue(" Эмодзи кнопки")
+                    })
+                    public String emoji = "❌";
+
+                    @Comment({
+                            @CommentValue(" Текст кнопки")
+                    })
+                    public String text = "Отклонить";
+                }
+            }
 
             @NewLine(amount = 1)
             @Comment({
@@ -122,10 +155,17 @@ public class Config extends YamlSerializable {
             })
             public String join = "Подтвердите вход на сервер!";
 
+            @NewLine(amount = 1)
             @Comment({
-                    @CommentValue(" Сообщение отправляемое при подтверждии входа")
+                    @CommentValue(" Сообщение отправляемое при подтверждении входа")
             })
             public String allowJoin = "Вход подтвержден!";
+
+            @NewLine(amount = 1)
+            @Comment({
+                    @CommentValue(" Сообщение отправляемое при отклонении входа")
+            })
+            public String denyJoin = "Вход отклонен!";
 
             @NewLine(amount = 1)
             @Comment({
@@ -148,8 +188,9 @@ public class Config extends YamlSerializable {
             })
             public List<String> join = Arrays.asList("", " &fПодтвердите вход через &bсоц. сеть&f!", "");
 
+            @NewLine(amount = 1)
             @Comment({
-                    @CommentValue(" Сообщение отправляемое при подтверждии входа")
+                    @CommentValue(" Сообщение отправляемое при подтверждении входа")
             })
             public List<String> allowJoin = Arrays.asList("", " &fВход успешно выполнен!", "");
 
@@ -168,12 +209,6 @@ public class Config extends YamlSerializable {
                     @CommentValue(" Сообщение отправляемое при отсутствии прав на команду")
             })
             public String noPermission = "&cНет прав!";
-
-            @NewLine(amount = 1)
-            @Comment({
-                    @CommentValue(" Сообщение при кике с сервера если игрок не успел подтвердить вход")
-            })
-            public String kick = "&cВы не успели подтвердить вход!";
         }
     }
 

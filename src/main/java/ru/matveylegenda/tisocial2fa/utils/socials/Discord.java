@@ -64,17 +64,27 @@ public class Discord {
                 player.sendMessage(ColorParser.hex(message));
             }
 
-            String buttonEmoji = config.messages.social.buttonEmoji;
-            String buttonText = config.messages.social.buttonText;
-            Button button = Button.danger("2fa-allow-join", buttonText)
-                    .withStyle(ButtonStyle.SECONDARY)
-                    .withEmoji(Emoji.fromUnicode(buttonEmoji));
+            String allowButtonEmoji = config.messages.social.buttons.allow.emoji;
+            String allowButtonText = config.messages.social.buttons.allow.text;
+            Button allowButton = Button.danger("2fa-allow-join", allowButtonText)
+                    .withStyle(ButtonStyle.SUCCESS)
+                    .withEmoji(Emoji.fromUnicode(allowButtonEmoji));
+
+            String denyButtonEmoji = config.messages.social.buttons.deny.emoji;
+            String denyButtonText = config.messages.social.buttons.deny.text;
+            Button denyButton = Button.danger("2fa-deny-join", denyButtonText)
+                    .withStyle(ButtonStyle.DANGER)
+                    .withEmoji(Emoji.fromUnicode(denyButtonEmoji));
 
             String joinDiscordMessage = config.messages.social.join;
             jda.openPrivateChannelById(discordID).queue(channel ->
                     channel.sendMessage(joinDiscordMessage)
                             .setComponents(
-                                    ActionRow.of(button)
+                                    ActionRow.of(
+                                            allowButton,
+                                            denyButton
+                                    )
+
                             )
                             .queue()
             );
@@ -127,8 +137,9 @@ public class Discord {
                     }
 
                     if (blockedList.isBlocked(player)) {
-                        String kickMessage = ColorParser.hex(config.messages.minecraft.kick);
-                        player.kickPlayer(kickMessage);
+                        String command = config.settings.timeoutCommand
+                                        .replace("{player}", player.getName());
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     }
                 }
             };

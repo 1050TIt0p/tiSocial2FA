@@ -73,6 +73,38 @@ public class AllowJoin extends ListenerAdapter {
                 }
             }
         }
+
+        if (event.getComponentId().equals("2fa-deny-join")) {
+            for (String nick : config.discord.users.keySet()) {
+                if (config.discord.users.get(nick).equals(discordID)) {
+
+                    if (event.isAcknowledged()) {
+                        return;
+                    }
+
+                    Player player = Bukkit.getPlayerExact(nick);
+
+                    if (player == null) {
+                        String playerNotFoundMessage = config.messages.social.playerNotFound;
+                        event.reply(playerNotFoundMessage)
+                                .queue();
+
+                        return;
+                    }
+
+                    String command = config.settings.punishCommand
+                            .replace("{player}", player.getName());
+
+                    Bukkit.getScheduler().runTask(plugin, () ->
+                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command)
+                    );
+
+                    String allowJoinDiscordMessage = config.messages.social.denyJoin;
+                    event.reply(allowJoinDiscordMessage)
+                            .queue();
+                }
+            }
+        }
     }
 
     public void consume(Update update) {
@@ -114,6 +146,32 @@ public class AllowJoin extends ListenerAdapter {
                         }
 
                         String allowJoinDiscordMessage = config.messages.social.allowJoin;
+                        telegramSendMessage(allowJoinDiscordMessage, chatId);
+                    }
+                }
+            }
+
+            if (callData.equals("2fa-deny-join")) {
+                for (String nick : config.telegram.users.keySet()) {
+                    if (config.telegram.users.get(nick).equals(String.valueOf(chatId))) {
+
+                        Player player = Bukkit.getPlayerExact(nick);
+
+                        if (player == null) {
+                            String playerNotFoundMessage = config.messages.social.playerNotFound;
+                            telegramSendMessage(playerNotFoundMessage, chatId);
+
+                            return;
+                        }
+
+                        String command = config.settings.punishCommand
+                                .replace("{player}", player.getName());
+
+                        Bukkit.getScheduler().runTask(plugin, () ->
+                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command)
+                        );
+
+                        String allowJoinDiscordMessage = config.messages.social.denyJoin;
                         telegramSendMessage(allowJoinDiscordMessage, chatId);
                     }
                 }
