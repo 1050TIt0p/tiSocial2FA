@@ -1,6 +1,5 @@
 package ru.matveylegenda.tisocial2fa;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,6 +38,7 @@ public final class TiSocial2FA extends JavaPlugin {
         config.reloadConfig();
 
         getCommand("tisocial2fa").setExecutor(new Social2FA());
+        getCommand("tisocial2fa").setTabCompleter(new Social2FA());
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new BlockListener(), this);

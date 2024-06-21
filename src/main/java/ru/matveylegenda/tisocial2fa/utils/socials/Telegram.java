@@ -23,8 +23,6 @@ import ru.matveylegenda.tisocial2fa.utils.BlockedList;
 import ru.matveylegenda.tisocial2fa.utils.ColorParser;
 import ru.matveylegenda.tisocial2fa.utils.Config;
 
-import java.util.Arrays;
-
 public class Telegram implements LongPollingSingleThreadUpdateConsumer {
     private TiSocial2FA plugin = TiSocial2FA.getInstance();
     private Config config = plugin.config;

@@ -27,7 +27,7 @@ public class Config extends YamlSerializable {
         @NewLine(amount = 1)
         @Comment({
                 @CommentValue(" Добавление юзеров"),
-                @CommentValue(" \"NICK\": DISCORD_ID")
+                @CommentValue(" NICK: \"DISCORD_ID\"")
         })
         public Map<String, String> users = new LinkedHashMap<>();
         {
@@ -49,7 +49,7 @@ public class Config extends YamlSerializable {
         @NewLine(amount = 1)
         @Comment({
                 @CommentValue(" Добавление юзеров"),
-                @CommentValue(" \"NICK\": CHAT_ID(чтобы узнать надо отправить бота /start)")
+                @CommentValue(" NICK: \"CHAT_ID(чтобы узнать надо отправить бота /start)\"")
         })
         public Map<String, String> users = new LinkedHashMap<>();
         {
@@ -198,7 +198,14 @@ public class Config extends YamlSerializable {
             @Comment({
                     @CommentValue(" Сообщение отправляемое при вводе команды без аргументов")
             })
-            public List<String> usage = Arrays.asList("", "Команды:", "/d2fa reload - перезагрузить конфиг", "");
+            public List<String> usage = Arrays.asList(
+                    "",
+                    "Команды:",
+                    "/social2fa reload - перезагрузить конфиг",
+                    "/social2fa add <discord/telegram> <ник> <айди> - добавить игрока в список",
+                    "/social2fa remove <discord/telegram> <ник> <айди> - удалить игрока из списка",
+                    ""
+            );
 
             @Comment({
                     @CommentValue(" Сообщение отправляемое при перезагрузке конфига")
@@ -206,10 +213,29 @@ public class Config extends YamlSerializable {
             public String reload = "&aКонфиг перезагружен!";
 
             @Comment({
+                    @CommentValue(" Сообщение отправляемое при добавлении игрока")
+            })
+            public String addPlayer = "&aИгрок {player} успешно добавлен";
+
+            @Comment({
+                    @CommentValue(" Сообщение отправляемое при удалении игрока")
+            })
+            public String removePlayer = "&aИгрок {player} успешно удален";
+
+            @Comment({
+                    @CommentValue(" Сообщение отправляемое при удалении игрока")
+            })
+            public String removePlayerNotFound = "&cИгрок {player} не найден в списке";
+
+            @Comment({
                     @CommentValue(" Сообщение отправляемое при отсутствии прав на команду")
             })
             public String noPermission = "&cНет прав!";
         }
+    }
+
+    public void saveConfig() {
+        save(TiSocial2FA.getInstance().configFile.toPath());
     }
 
     public void reloadConfig() {
