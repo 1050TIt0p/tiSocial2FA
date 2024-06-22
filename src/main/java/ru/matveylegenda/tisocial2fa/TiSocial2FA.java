@@ -4,6 +4,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.matveylegenda.tisocial2fa.commands.Social2FA;
+import ru.matveylegenda.tisocial2fa.hooks.Placeholders;
 import ru.matveylegenda.tisocial2fa.listeners.BlockListener;
 import ru.matveylegenda.tisocial2fa.listeners.PlayerJoin;
 import ru.matveylegenda.tisocial2fa.listeners.PlayerQuit;
@@ -51,6 +52,10 @@ public final class TiSocial2FA extends JavaPlugin {
         new Metrics(this, 22325);
 
         new MessageTask();
+
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
+            new Placeholders().register();
+        }
     }
 
     public static TiSocial2FA getInstance() {

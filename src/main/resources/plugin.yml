@@ -2,6 +2,8 @@ name: tiSocial2FA
 version: '${project.version}'
 main: ru.matveylegenda.tisocial2fa.TiSocial2FA
 api-version: '1.16'
+softdepend:
+  - PlaceholderAPI
 libraries:
   - net.dv8tion:JDA:5.0.0-beta.22
   - org.telegram:telegrambots-client:7.4.2
