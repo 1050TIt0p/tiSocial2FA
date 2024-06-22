@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -39,7 +39,8 @@ public class AllowJoin extends ListenerAdapter {
 
                     if (player == null) {
                         String playerNotFoundMessage = config.messages.social.playerNotFound;
-                        event.reply(playerNotFoundMessage)
+                        event.editMessage(playerNotFoundMessage)
+                                .setComponents()
                                 .queue();
 
                         return;
@@ -47,7 +48,8 @@ public class AllowJoin extends ListenerAdapter {
 
                     if (blockedList.isEmpty()) {
                         String verifyNotRequiredMessage = config.messages.social.verifyNotRequired;
-                        event.reply(verifyNotRequiredMessage)
+                        event.editMessage(verifyNotRequiredMessage)
+                                .setComponents()
                                 .queue();
 
                         return;
@@ -55,7 +57,8 @@ public class AllowJoin extends ListenerAdapter {
 
                     if(!blockedList.isBlocked(player)) {
                         String verifyNotRequiredMessage = config.messages.social.verifyNotRequired;
-                        event.reply(verifyNotRequiredMessage)
+                        event.editMessage(verifyNotRequiredMessage)
+                                .setComponents()
                                 .queue();
 
                         return;
@@ -63,12 +66,13 @@ public class AllowJoin extends ListenerAdapter {
 
                     blockedList.remove(player);
 
-                    for (String message : config.messages.minecraft.allowJoin) {
-                        player.sendMessage(ColorParser.hex(message));
+                    for (String allowJoin : config.messages.minecraft.allowJoin) {
+                        player.sendMessage(ColorParser.hex(allowJoin));
                     }
 
                     String allowJoinDiscordMessage = config.messages.social.allowJoin;
-                    event.reply(allowJoinDiscordMessage)
+                    event.editMessage(allowJoinDiscordMessage)
+                            .setComponents()
                             .queue();
                 }
             }
@@ -86,7 +90,8 @@ public class AllowJoin extends ListenerAdapter {
 
                     if (player == null) {
                         String playerNotFoundMessage = config.messages.social.playerNotFound;
-                        event.reply(playerNotFoundMessage)
+                        event.editMessage(playerNotFoundMessage)
+                                .setComponents()
                                 .queue();
 
                         return;
@@ -100,7 +105,8 @@ public class AllowJoin extends ListenerAdapter {
                     );
 
                     String allowJoinDiscordMessage = config.messages.social.denyJoin;
-                    event.reply(allowJoinDiscordMessage)
+                    event.editMessage(allowJoinDiscordMessage)
+                            .setComponents()
                             .queue();
                 }
             }
@@ -111,6 +117,7 @@ public class AllowJoin extends ListenerAdapter {
         if (update.hasCallbackQuery()) {
             String callData = update.getCallbackQuery().getData();
             long chatId = update.getCallbackQuery().getMessage().getChatId();
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
 
             if (callData.equals("2fa-allow-join")) {
                 for (String nick : config.telegram.users.keySet()) {
@@ -120,21 +127,21 @@ public class AllowJoin extends ListenerAdapter {
 
                         if (player == null) {
                             String playerNotFoundMessage = config.messages.social.playerNotFound;
-                            telegramSendMessage(playerNotFoundMessage, chatId);
+                            telegramEditMessage(playerNotFoundMessage, chatId, messageId);
 
                             return;
                         }
 
                         if (blockedList.isEmpty()) {
                             String verifyNotRequiredMessage = config.messages.social.verifyNotRequired;
-                            telegramSendMessage(verifyNotRequiredMessage, chatId);
+                            telegramEditMessage(verifyNotRequiredMessage, chatId, messageId);
 
                             return;
                         }
 
                         if(!blockedList.isBlocked(player)) {
                             String verifyNotRequiredMessage = config.messages.social.verifyNotRequired;
-                            telegramSendMessage(verifyNotRequiredMessage, chatId);
+                            telegramEditMessage(verifyNotRequiredMessage, chatId, messageId);
 
                             return;
                         }
@@ -146,7 +153,7 @@ public class AllowJoin extends ListenerAdapter {
                         }
 
                         String allowJoinDiscordMessage = config.messages.social.allowJoin;
-                        telegramSendMessage(allowJoinDiscordMessage, chatId);
+                        telegramEditMessage(allowJoinDiscordMessage, chatId, messageId);
                     }
                 }
             }
@@ -159,7 +166,7 @@ public class AllowJoin extends ListenerAdapter {
 
                         if (player == null) {
                             String playerNotFoundMessage = config.messages.social.playerNotFound;
-                            telegramSendMessage(playerNotFoundMessage, chatId);
+                            telegramEditMessage(playerNotFoundMessage, chatId, messageId);
 
                             return;
                         }
@@ -172,17 +179,18 @@ public class AllowJoin extends ListenerAdapter {
                         );
 
                         String allowJoinDiscordMessage = config.messages.social.denyJoin;
-                        telegramSendMessage(allowJoinDiscordMessage, chatId);
+                        telegramEditMessage(allowJoinDiscordMessage, chatId, messageId);
                     }
                 }
             }
         }
     }
 
-    private void telegramSendMessage(String content, long chatId) {
-        SendMessage message = SendMessage
+    private void telegramEditMessage(String content, long chatId, long messageId) {
+        EditMessageText message = EditMessageText
                 .builder()
                 .chatId(chatId)
+                .messageId(Math.toIntExact(messageId))
                 .text(content)
                 .build();
 
