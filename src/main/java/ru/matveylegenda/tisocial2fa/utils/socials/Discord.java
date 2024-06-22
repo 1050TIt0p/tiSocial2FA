@@ -14,6 +14,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.matveylegenda.tisocial2fa.TiSocial2FA;
+import ru.matveylegenda.tisocial2fa.api.SocialCaptureEvent;
 import ru.matveylegenda.tisocial2fa.listeners.AllowJoin;
 import ru.matveylegenda.tisocial2fa.utils.BlockedList;
 import ru.matveylegenda.tisocial2fa.utils.ColorParser;
@@ -144,6 +145,9 @@ public class Discord {
                 }
             };
             kickTask.runTaskLater(plugin, time * 20L);
+
+            SocialCaptureEvent socialCaptureEvent = new SocialCaptureEvent(player);
+            Bukkit.getServer().getPluginManager().callEvent(socialCaptureEvent);
         }
     }
 

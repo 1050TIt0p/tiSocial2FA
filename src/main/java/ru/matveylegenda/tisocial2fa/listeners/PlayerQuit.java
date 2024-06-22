@@ -1,9 +1,11 @@
 package ru.matveylegenda.tisocial2fa.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import ru.matveylegenda.tisocial2fa.api.SocialLogoutEvent;
 import ru.matveylegenda.tisocial2fa.utils.BlockedList;
 
 public class PlayerQuit implements Listener {
@@ -19,6 +21,9 @@ public class PlayerQuit implements Listener {
 
         if (blockedList.isBlocked(player)) {
             blockedList.remove(player);
+
+            SocialLogoutEvent socialLogoutEvent = new SocialLogoutEvent(player);
+            Bukkit.getServer().getPluginManager().callEvent(socialLogoutEvent);
         }
     }
 }

@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.matveylegenda.tisocial2fa.TiSocial2FA;
+import ru.matveylegenda.tisocial2fa.api.SocialCaptureEvent;
 import ru.matveylegenda.tisocial2fa.commands.telegram.StartCommand;
 import ru.matveylegenda.tisocial2fa.listeners.AllowJoin;
 import ru.matveylegenda.tisocial2fa.utils.BlockedList;
@@ -155,6 +156,9 @@ public class Telegram implements LongPollingSingleThreadUpdateConsumer {
                 }
             };
             kickTask.runTaskLater(plugin, time * 20L);
+
+            SocialCaptureEvent socialCaptureEvent = new SocialCaptureEvent(player);
+            Bukkit.getServer().getPluginManager().callEvent(socialCaptureEvent);
         }
     }
 
