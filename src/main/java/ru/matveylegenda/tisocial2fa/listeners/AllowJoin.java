@@ -72,8 +72,8 @@ public class AllowJoin extends ListenerAdapter {
                         player.sendMessage(ColorParser.hex(allowJoin));
                     }
 
-                    String allowJoinDiscordMessage = config.messages.social.allowJoin;
-                    event.editMessage(allowJoinDiscordMessage)
+                    String allowJoinSocialMessage = config.messages.social.allowJoin;
+                    event.editMessage(allowJoinSocialMessage)
                             .setComponents()
                             .queue();
 
@@ -109,8 +109,8 @@ public class AllowJoin extends ListenerAdapter {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command)
                     );
 
-                    String allowJoinDiscordMessage = config.messages.social.denyJoin;
-                    event.editMessage(allowJoinDiscordMessage)
+                    String denyJoinSocialMessage = config.messages.social.denyJoin;
+                    event.editMessage(denyJoinSocialMessage)
                             .setComponents()
                             .queue();
 
@@ -160,8 +160,8 @@ public class AllowJoin extends ListenerAdapter {
                             player.sendMessage(ColorParser.hex(message));
                         }
 
-                        String allowJoinDiscordMessage = config.messages.social.allowJoin;
-                        telegramEditMessage(allowJoinDiscordMessage, chatId, messageId);
+                        String allowJoinSocialMessage = config.messages.social.allowJoin;
+                        telegramEditMessage(allowJoinSocialMessage, chatId, messageId);
 
                         SocialAllowJoinEvent socialAllowJoinEvent = new SocialAllowJoinEvent(player);
                         Bukkit.getServer().getPluginManager().callEvent(socialAllowJoinEvent);
@@ -189,8 +189,8 @@ public class AllowJoin extends ListenerAdapter {
                                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command)
                         );
 
-                        String allowJoinDiscordMessage = config.messages.social.denyJoin;
-                        telegramEditMessage(allowJoinDiscordMessage, chatId, messageId);
+                        String denyJoinSocialMessage = config.messages.social.denyJoin;
+                        telegramEditMessage(denyJoinSocialMessage, chatId, messageId);
 
                         SocialDenyJoinEvent socialDenyJoinEvent = new SocialDenyJoinEvent(player);
                         Bukkit.getServer().getPluginManager().callEvent(socialDenyJoinEvent);
