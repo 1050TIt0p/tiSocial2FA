@@ -13,8 +13,16 @@ import java.util.Map;
 
 public class Config extends YamlSerializable {
 
+    @Comment({
+            @CommentValue(" Доступные варианты:"),
+            @CommentValue(" LEGACY - \"&fПример &#650dbdтекста\""),
+            @CommentValue(" MINIMESSAGE - \"<white>Пример</white> <color:#650dbd>текста</color>\" (https://webui.advntr.dev/)"),
+    })
+    public String serializer = "LEGACY";
+
     public Discord discord = new Discord();
 
+    @NewLine(amount = 1)
     public static class Discord {
         public boolean enabled = false;
 

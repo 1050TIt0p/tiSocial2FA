@@ -13,8 +13,9 @@ import ru.matveylegenda.tisocial2fa.TiSocial2FA;
 import ru.matveylegenda.tisocial2fa.api.SocialAllowJoinEvent;
 import ru.matveylegenda.tisocial2fa.api.SocialDenyJoinEvent;
 import ru.matveylegenda.tisocial2fa.utils.BlockedList;
-import ru.matveylegenda.tisocial2fa.utils.ColorParser;
 import ru.matveylegenda.tisocial2fa.utils.Config;
+
+import static ru.matveylegenda.tisocial2fa.utils.ColorParser.colorize;
 
 public class AllowJoin extends ListenerAdapter {
     private TiSocial2FA plugin = TiSocial2FA.getInstance();
@@ -69,7 +70,7 @@ public class AllowJoin extends ListenerAdapter {
                     blockedList.remove(player);
 
                     for (String allowJoin : config.messages.minecraft.allowJoin) {
-                        player.sendMessage(ColorParser.hex(allowJoin));
+                        player.sendMessage(colorize(allowJoin, config.serializer));
                     }
 
                     String allowJoinSocialMessage = config.messages.social.allowJoin;
@@ -78,7 +79,10 @@ public class AllowJoin extends ListenerAdapter {
                             .queue();
 
                     SocialAllowJoinEvent socialAllowJoinEvent = new SocialAllowJoinEvent(player);
-                    Bukkit.getServer().getPluginManager().callEvent(socialAllowJoinEvent);
+
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        Bukkit.getServer().getPluginManager().callEvent(socialAllowJoinEvent);
+                    });
                 }
             }
         }
@@ -105,17 +109,17 @@ public class AllowJoin extends ListenerAdapter {
                     String command = config.settings.punishCommand
                             .replace("{player}", player.getName());
 
-                    Bukkit.getScheduler().runTask(plugin, () ->
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command)
-                    );
+                    SocialDenyJoinEvent socialDenyJoinEvent = new SocialDenyJoinEvent(player);
+
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+                        Bukkit.getServer().getPluginManager().callEvent(socialDenyJoinEvent);
+                    });
 
                     String denyJoinSocialMessage = config.messages.social.denyJoin;
                     event.editMessage(denyJoinSocialMessage)
                             .setComponents()
                             .queue();
-
-                    SocialDenyJoinEvent socialDenyJoinEvent = new SocialDenyJoinEvent(player);
-                    Bukkit.getServer().getPluginManager().callEvent(socialDenyJoinEvent);
                 }
             }
         }
@@ -157,14 +161,17 @@ public class AllowJoin extends ListenerAdapter {
                         blockedList.remove(player);
 
                         for (String message : config.messages.minecraft.allowJoin) {
-                            player.sendMessage(ColorParser.hex(message));
+                            player.sendMessage(colorize(message, config.serializer));
                         }
 
                         String allowJoinSocialMessage = config.messages.social.allowJoin;
                         telegramEditMessage(allowJoinSocialMessage, chatId, messageId);
 
                         SocialAllowJoinEvent socialAllowJoinEvent = new SocialAllowJoinEvent(player);
-                        Bukkit.getServer().getPluginManager().callEvent(socialAllowJoinEvent);
+
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            Bukkit.getServer().getPluginManager().callEvent(socialAllowJoinEvent);
+                        });
                     }
                 }
             }
@@ -185,15 +192,15 @@ public class AllowJoin extends ListenerAdapter {
                         String command = config.settings.punishCommand
                                 .replace("{player}", player.getName());
 
-                        Bukkit.getScheduler().runTask(plugin, () ->
-                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command)
-                        );
+                        SocialDenyJoinEvent socialDenyJoinEvent = new SocialDenyJoinEvent(player);
+
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+                            Bukkit.getServer().getPluginManager().callEvent(socialDenyJoinEvent);
+                        });
 
                         String denyJoinSocialMessage = config.messages.social.denyJoin;
                         telegramEditMessage(denyJoinSocialMessage, chatId, messageId);
-
-                        SocialDenyJoinEvent socialDenyJoinEvent = new SocialDenyJoinEvent(player);
-                        Bukkit.getServer().getPluginManager().callEvent(socialDenyJoinEvent);
                     }
                 }
             }

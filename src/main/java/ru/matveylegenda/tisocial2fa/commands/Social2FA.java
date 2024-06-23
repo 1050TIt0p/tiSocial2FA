@@ -5,11 +5,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import ru.matveylegenda.tisocial2fa.TiSocial2FA;
-import ru.matveylegenda.tisocial2fa.utils.ColorParser;
 import ru.matveylegenda.tisocial2fa.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.matveylegenda.tisocial2fa.utils.ColorParser.colorize;
 
 public class Social2FA implements CommandExecutor, TabCompleter {
     private TiSocial2FA plugin = TiSocial2FA.getInstance();
@@ -21,14 +22,14 @@ public class Social2FA implements CommandExecutor, TabCompleter {
         if (args.length == 0) {
 
             if (!sender.hasPermission("tisocial2fa.use")) {
-                String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                 sender.sendMessage(noPermissionMessage);
 
                 return true;
             }
 
             for (String message : config.messages.minecraft.usage) {
-                sender.sendMessage(ColorParser.hex(message));
+                sender.sendMessage(colorize(message, config.serializer));
             }
 
             return true;
@@ -37,7 +38,7 @@ public class Social2FA implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("reload")) {
 
             if (!sender.hasPermission("tisocial2fa.reload")) {
-                String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                 sender.sendMessage(noPermissionMessage);
 
                 return true;
@@ -45,7 +46,7 @@ public class Social2FA implements CommandExecutor, TabCompleter {
 
             config.reloadConfig();
 
-            String reloadMessage = ColorParser.hex(config.messages.minecraft.reload);
+            String reloadMessage = colorize(config.messages.minecraft.reload, config.serializer);
             sender.sendMessage(reloadMessage);
 
             return true;
@@ -54,7 +55,7 @@ public class Social2FA implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("add")) {
 
             if (!sender.hasPermission("tisocial2fa.add")) {
-                String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                 sender.sendMessage(noPermissionMessage);
 
                 return true;
@@ -63,14 +64,14 @@ public class Social2FA implements CommandExecutor, TabCompleter {
             if (args.length < 4) {
 
                 if (!sender.hasPermission("tisocial2fa.use")) {
-                    String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                    String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                     sender.sendMessage(noPermissionMessage);
 
                     return true;
                 }
 
                 for (String message : config.messages.minecraft.usage) {
-                    sender.sendMessage(ColorParser.hex(message));
+                    sender.sendMessage(colorize(message, config.serializer));
                 }
 
                 return true;
@@ -80,9 +81,10 @@ public class Social2FA implements CommandExecutor, TabCompleter {
                 config.discord.users.put(args[2], args[3]);
                 config.saveConfig();
 
-                String addPlayer = ColorParser.hex(
+                String addPlayer = colorize(
                         config.messages.minecraft.addPlayer
-                                .replace("{player}", args[2])
+                                .replace("{player}", args[2]),
+                        config.serializer
                 );
                 sender.sendMessage(addPlayer);
 
@@ -93,9 +95,10 @@ public class Social2FA implements CommandExecutor, TabCompleter {
                 config.telegram.users.put(args[2], args[3]);
                 config.saveConfig();
 
-                String addPlayer = ColorParser.hex(
+                String addPlayer = colorize(
                         config.messages.minecraft.addPlayer
-                                .replace("{player}", args[2])
+                                .replace("{player}", args[2]),
+                        config.serializer
                 );
                 sender.sendMessage(addPlayer);
 
@@ -103,14 +106,14 @@ public class Social2FA implements CommandExecutor, TabCompleter {
             }
 
             if (!sender.hasPermission("tisocial2fa.use")) {
-                String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                 sender.sendMessage(noPermissionMessage);
 
                 return true;
             }
 
             for (String message : config.messages.minecraft.usage) {
-                sender.sendMessage(ColorParser.hex(message));
+                sender.sendMessage(colorize(message, config.serializer));
             }
 
             return true;
@@ -119,7 +122,7 @@ public class Social2FA implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("remove")) {
 
             if (!sender.hasPermission("tisocial2fa.remove")) {
-                String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                 sender.sendMessage(noPermissionMessage);
 
                 return true;
@@ -128,14 +131,14 @@ public class Social2FA implements CommandExecutor, TabCompleter {
             if (args.length < 3) {
 
                 if (!sender.hasPermission("tisocial2fa.use")) {
-                    String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                    String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                     sender.sendMessage(noPermissionMessage);
 
                     return true;
                 }
 
                 for (String message : config.messages.minecraft.usage) {
-                    sender.sendMessage(ColorParser.hex(message));
+                    sender.sendMessage(colorize(message, config.serializer));
                 }
 
                 return true;
@@ -145,9 +148,10 @@ public class Social2FA implements CommandExecutor, TabCompleter {
 
                 if (!config.discord.users.keySet().contains(args[2])) {
 
-                    String removePlayerNotFound = ColorParser.hex(
+                    String removePlayerNotFound = colorize(
                             config.messages.minecraft.removePlayerNotFound
-                                    .replace("{player}", args[2])
+                                    .replace("{player}", args[2]),
+                            config.serializer
                     );
                     sender.sendMessage(removePlayerNotFound);
 
@@ -157,9 +161,10 @@ public class Social2FA implements CommandExecutor, TabCompleter {
                 config.discord.users.remove(args[2]);
                 config.saveConfig();
 
-                String removePlayer = ColorParser.hex(
+                String removePlayer = colorize(
                         config.messages.minecraft.removePlayer
-                                .replace("{player}", args[2])
+                                .replace("{player}", args[2]),
+                        config.serializer
                 );
                 sender.sendMessage(removePlayer);
 
@@ -170,9 +175,10 @@ public class Social2FA implements CommandExecutor, TabCompleter {
 
                 if (!config.telegram.users.keySet().contains(args[2])) {
 
-                    String removePlayerNotFound = ColorParser.hex(
+                    String removePlayerNotFound = colorize(
                             config.messages.minecraft.removePlayerNotFound
-                                    .replace("{player}", args[2])
+                                    .replace("{player}", args[2]),
+                            config.serializer
                     );
                     sender.sendMessage(removePlayerNotFound);
 
@@ -182,9 +188,11 @@ public class Social2FA implements CommandExecutor, TabCompleter {
                 config.telegram.users.remove(args[2]);
                 config.saveConfig();
 
-                String removePlayer = ColorParser.hex(
+                String removePlayer = colorize(
                         config.messages.minecraft.removePlayer
-                                .replace("{player}", args[2])
+                                .replace("{player}", args[2]),
+                        config.serializer
+
                 );
                 sender.sendMessage(removePlayer);
 
@@ -192,14 +200,14 @@ public class Social2FA implements CommandExecutor, TabCompleter {
             }
 
             if (!sender.hasPermission("tisocial2fa.use")) {
-                String noPermissionMessage = ColorParser.hex(config.messages.minecraft.noPermission);
+                String noPermissionMessage = colorize(config.messages.minecraft.noPermission, config.serializer);
                 sender.sendMessage(noPermissionMessage);
 
                 return true;
             }
 
             for (String message : config.messages.minecraft.usage) {
-                sender.sendMessage(ColorParser.hex(message));
+                sender.sendMessage(colorize(message, config.serializer));
             }
 
             return true;

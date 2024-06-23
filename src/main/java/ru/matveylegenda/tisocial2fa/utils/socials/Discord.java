@@ -17,8 +17,9 @@ import ru.matveylegenda.tisocial2fa.TiSocial2FA;
 import ru.matveylegenda.tisocial2fa.api.SocialCaptureEvent;
 import ru.matveylegenda.tisocial2fa.listeners.AllowJoin;
 import ru.matveylegenda.tisocial2fa.utils.BlockedList;
-import ru.matveylegenda.tisocial2fa.utils.ColorParser;
 import ru.matveylegenda.tisocial2fa.utils.Config;
+
+import static ru.matveylegenda.tisocial2fa.utils.ColorParser.colorize;
 
 public class Discord {
     private TiSocial2FA plugin = TiSocial2FA.getInstance();
@@ -62,7 +63,7 @@ public class Discord {
             blockedList.add(player);
 
             for (String message : config.messages.minecraft.join) {
-                player.sendMessage(ColorParser.hex(message));
+                player.sendMessage(colorize(message, config.serializer));
             }
 
             String allowButtonEmoji = config.messages.social.buttons.allow.emoji;
@@ -93,9 +94,10 @@ public class Discord {
             int time = config.settings.time;
 
             if (config.settings.bossbar.enabled) {
-                String barTitle = ColorParser.hex(
+                String barTitle = colorize(
                         config.settings.bossbar.title
-                                .replace("{time}", String.valueOf(time))
+                                .replace("{time}", String.valueOf(time)),
+                        config.serializer
                 );
                 BarColor barColor = BarColor.valueOf(config.settings.bossbar.color);
                 BarStyle barStyle = BarStyle.valueOf(config.settings.bossbar.style);
@@ -119,9 +121,10 @@ public class Discord {
                         double progress = (double) remainingTime / time;
                         bossBar.setProgress(progress);
 
-                        String barTitle = ColorParser.hex(
+                        String barTitle = colorize(
                                 config.settings.bossbar.title
-                                        .replace("{time}", String.valueOf(remainingTime))
+                                        .replace("{time}", String.valueOf(remainingTime)),
+                                config.serializer
                         );
                         bossBar.setTitle(barTitle);
                     }

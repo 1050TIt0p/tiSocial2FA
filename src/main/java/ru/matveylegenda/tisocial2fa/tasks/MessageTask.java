@@ -5,8 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.matveylegenda.tisocial2fa.TiSocial2FA;
 import ru.matveylegenda.tisocial2fa.utils.BlockedList;
-import ru.matveylegenda.tisocial2fa.utils.ColorParser;
 import ru.matveylegenda.tisocial2fa.utils.Config;
+
+import static ru.matveylegenda.tisocial2fa.utils.ColorParser.colorize;
 
 public class MessageTask {
     private TiSocial2FA plugin = TiSocial2FA.getInstance();
@@ -24,7 +25,7 @@ public class MessageTask {
 
                     if (blockedList.isBlocked(player)) {
                         for (String message : config.messages.minecraft.join) {
-                            player.sendMessage(ColorParser.hex(message));
+                            player.sendMessage(colorize(message, config.serializer));
                         }
                     }
                 }
